@@ -19,8 +19,6 @@ class MatchPage extends StatefulHookWidget {
 class _MatchPageState extends State<MatchPage> {
   late Match match;
 
-  bool saved = false;
-
   @override
   void initState() {
     match = Match.fromNames(widget.players.map((e) => e.name).toList());
@@ -34,11 +32,9 @@ class _MatchPageState extends State<MatchPage> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
+        if (didPop) return;
         if (match.score.finished) {
-          if (!saved) {
-            await Hive.box('matches').add(jsonEncode(match));
-            saved = true;
-          }
+          await Hive.box('matches').add(jsonEncode(match));
 
           if (context.mounted) {
             Navigator.of(context).popUntil((route) => route.isFirst);
@@ -66,7 +62,7 @@ class _MatchPageState extends State<MatchPage> {
           ),
         );
         if (result == true && context.mounted) {
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          Future(() => Navigator.of(context).popUntil((route) => route.isFirst));
         }
       },
       child: Scaffold(
@@ -95,7 +91,7 @@ class _MatchPageState extends State<MatchPage> {
                       final name = e.$2;
                       return Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(
                             border: Border(
                               bottom: BorderSide(color: Colors.black12),
