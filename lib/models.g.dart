@@ -40,6 +40,7 @@ Score _$ScoreFromJson(Map<String, dynamic> json) => Score(
       money: (json['money'] as List<dynamic>)
           .map((e) => (e as num).toDouble())
           .toList(),
+      winner: (json['winner'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ScoreToJson(Score instance) => <String, dynamic>{
@@ -48,4 +49,5 @@ Map<String, dynamic> _$ScoreToJson(Score instance) => <String, dynamic>{
       'kickes': instance.kickes,
       'horses': instance.horses,
       'money': instance.money,
+      'winner': instance.winner,
     };

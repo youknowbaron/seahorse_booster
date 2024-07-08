@@ -109,8 +109,13 @@ class _MatchPageState extends State<MatchPage> {
                                 children: [
                                   Text(
                                     name,
-                                    style:
-                                        const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                      fontSize: match.score.winner == index ? 28 : 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: match.score.winner == index
+                                          ? Theme.of(context).primaryColor
+                                          : null,
+                                    ),
                                   ),
                                   const Spacer(),
                                   Text(
@@ -154,8 +159,33 @@ class _MatchPageState extends State<MatchPage> {
                                       ),
                                     ],
                                   ),
+                                  if (match.score.horses[index] == 4) ...[
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Checkbox(
+                                          value: index == match.score.winner,
+                                          onChanged: (value) {
+                                            if (value == true) {
+                                              match.score.win(index);
+                                            } else {
+                                              match.score.undoWin(index);
+                                            }
+                                            setState(() {});
+                                          },
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            match.score.win(index);
+                                            setState(() {});
+                                          },
+                                          child: const Text('Chiến thắng'),
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 ],
-                              )
+                              ),
                             ],
                           ),
                         ),

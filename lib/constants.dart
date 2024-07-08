@@ -3,4 +3,5 @@ class Constants {
 
   static const kickPrice = 2;
   static const onStagePrice = 5;
+  static const winPrice = 10;
 }

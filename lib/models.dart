@@ -50,11 +50,14 @@ class Score {
   final List<int> kickes;
   final List<int> horses;
   final List<double> money;
+  int? winner;
+
   final List<String> history = [];
 
   int get numberOfPlayers => names.length;
 
-  bool get finished => horses.where((element) => element >= 4).isNotEmpty;
+  // bool get finished => horses.where((element) => element >= 4).isNotEmpty;
+  bool get finished => winner != null;
 
   String get summary => names.indexed.map((e) {
         final index = e.$1;
@@ -88,12 +91,31 @@ class Score {
     history.add('${DateTime.now().toIso8601String()}: ${names[index]} xuống ngựa');
   }
 
-  Score(
-      {required this.id,
-      required this.names,
-      required this.kickes,
-      required this.horses,
-      required this.money});
+  void win(int index) {
+    if (winner != null) undoWin(winner!);
+    winner = index;
+    for (var i = 0; i < numberOfPlayers; ++i) {
+      money[i] += index == i ? Constants.winPrice * (numberOfPlayers - 1) : -Constants.winPrice;
+    }
+    history.add('${DateTime.now().toIso8601String()}: ${names[index]} chiến thắng');
+  }
+
+  void undoWin(int index) {
+    winner = null;
+    for (var i = 0; i < numberOfPlayers; ++i) {
+      money[i] += index == i ? -Constants.winPrice * (numberOfPlayers - 1) : Constants.winPrice;
+    }
+    history.add('${DateTime.now().toIso8601String()}: ${names[index]} bị hủy chiến thắng');
+  }
+
+  Score({
+    required this.id,
+    required this.names,
+    required this.kickes,
+    required this.horses,
+    required this.money,
+    this.winner,
+  });
 
   factory Score.fromJson(Map<String, dynamic> json) => _$ScoreFromJson(json);
 
