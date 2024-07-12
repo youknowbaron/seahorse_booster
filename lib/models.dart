@@ -59,18 +59,22 @@ class Score {
   // bool get finished => horses.where((element) => element >= 4).isNotEmpty;
   bool get finished => winner != null;
 
+  String? get winnerName => winner != null ? names[winner!] : null;
+
   String get summary => names.indexed.map((e) {
         final index = e.$1;
         final name = e.$2;
         return '$name ${money[index]}';
       }).join(' | ');
 
-  void kick(int kick, int victim) {
-    ++kickes[kick];
-    --kickes[victim];
-    money[kick] += Constants.kickPrice;
-    money[victim] -= Constants.kickPrice;
-    history.add('${DateTime.now().toIso8601String()}: ${names[kick]} đá đầu heo ${names[victim]}');
+  void kick(int kick, int victim, [int power = 1]) {
+    kickes[kick] += power;
+    kickes[victim] -= power;
+    money[kick] += Constants.kickPrice * power;
+    money[victim] -= Constants.kickPrice * power;
+    history.add(
+      '${DateTime.now().toIso8601String()}: ${names[kick]} ${power > 1 ? 'đá cực mạnh' : 'đá'} đầu heo ${names[victim]}',
+    );
   }
 
   void onStage(int index) {

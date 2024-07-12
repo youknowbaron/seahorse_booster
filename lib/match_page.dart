@@ -1,11 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
+import 'package:seahorse_calculator/constants.dart';
 import 'package:seahorse_calculator/counter.dart';
 import 'package:seahorse_calculator/history_page.dart';
+import 'package:seahorse_calculator/kick_dialog.dart';
 import 'package:seahorse_calculator/models.dart';
+import 'package:seahorse_calculator/result_page.dart';
 
 class MatchPage extends StatefulHookWidget {
   const MatchPage({super.key, required this.players});
@@ -18,6 +22,7 @@ class MatchPage extends StatefulHookWidget {
 
 class _MatchPageState extends State<MatchPage> {
   late Match match;
+  bool _superKick = false;
 
   @override
   void initState() {
@@ -126,7 +131,25 @@ class _MatchPageState extends State<MatchPage> {
                                 children: [
                                   Row(
                                     children: [
-                                      const Text('Đá'),
+                                      Text.rich(
+                                        TextSpan(
+                                          text: 'Đá',
+                                          children: [
+                                            TextSpan(
+                                              text: ' (mạnh)',
+                                              style: TextStyle(
+                                                color: Theme.of(context).primaryColor,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () {
+                                                  _superKick = true;
+                                                  kickingIndex.value = index;
+                                                },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                       const SizedBox(width: 8),
                                       CustomizableCounter(
                                         count: match.score.kickes[index].toDouble(),
@@ -164,6 +187,11 @@ class _MatchPageState extends State<MatchPage> {
                                           onChanged: (value) {
                                             if (value == true) {
                                               match.score.win(index);
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) => ResultPage(match: match),
+                                                ),
+                                              );
                                             } else {
                                               match.score.undoWin(index);
                                             }
@@ -173,6 +201,11 @@ class _MatchPageState extends State<MatchPage> {
                                         TextButton(
                                           onPressed: () {
                                             match.score.win(index);
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => ResultPage(match: match),
+                                              ),
+                                            );
                                             setState(() {});
                                           },
                                           child: const Text('Chiến thắng'),
@@ -194,11 +227,25 @@ class _MatchPageState extends State<MatchPage> {
                       final name = e.$2;
                       return Expanded(
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             if (index != kickingIndex.value) {
-                              match.score.kick(kickingIndex.value!, index);
+                              match.score.kick(
+                                kickingIndex.value!,
+                                index,
+                                _superKick ? Constants.superKickPower : 1,
+                              );
+                              if (_superKick) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => HitDialog(
+                                    a: match.score.names[kickingIndex.value!],
+                                    b: match.score.names[index],
+                                  ),
+                                );
+                              }
                               setState(() {});
                             }
+                            _superKick = false;
                             kickingIndex.value = null;
                           },
                           child: Container(
