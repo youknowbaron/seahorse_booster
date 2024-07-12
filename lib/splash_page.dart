@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lottie/lottie.dart';
+import 'package:seahorse_calculator/extensions.dart';
 import 'package:seahorse_calculator/main.dart';
 
 class SplashPage extends HookWidget {
@@ -23,8 +24,8 @@ class SplashPage extends HookWidget {
       body: SafeArea(
         child: Center(
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.5,
-            height: MediaQuery.of(context).size.width * 0.5,
+            width: context.preferredScreenSize * 0.5,
+            height: context.preferredScreenSize * 0.5,
             child: Lottie.asset(
               'assets/lottie/seahorse.json',
               controller: controller,

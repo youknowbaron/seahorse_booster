@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
+import 'package:seahorse_calculator/extensions.dart';
 import 'package:seahorse_calculator/models.dart';
 
 class ResultPage extends HookWidget {
@@ -85,8 +86,8 @@ class ResultPage extends HookWidget {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.33,
-                height: MediaQuery.of(context).size.width * 0.33,
+                width: context.preferredScreenSize * 0.33,
+                height: context.preferredScreenSize * 0.33,
                 child: Lottie.asset(
                   'assets/lottie/pepe_radio.json',
                   controller: controller,

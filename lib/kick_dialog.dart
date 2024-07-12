@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lottie/lottie.dart';
+import 'package:seahorse_calculator/extensions.dart';
 
 class DialogContainer extends StatelessWidget {
   const DialogContainer({
@@ -83,8 +84,8 @@ class HitDialog extends HookWidget {
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.5,
-            height: MediaQuery.of(context).size.width * 0.5,
+            width: context.preferredScreenSize * 0.5,
+            height: context.preferredScreenSize * 0.5,
             child: Lottie.asset(
               'assets/lottie/kick.json',
               controller: controller,
