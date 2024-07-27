@@ -20,12 +20,14 @@ Match _$MatchFromJson(Map<String, dynamic> json) => Match(
       id: json['id'] as String,
       name: json['name'] as String,
       score: Score.fromJson(json['score'] as Map<String, dynamic>),
+      createdAt: json['createdAt'] as String,
     );
 
 Map<String, dynamic> _$MatchToJson(Match instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'score': instance.score,
+      'createdAt': instance.createdAt,
     };
 
 Score _$ScoreFromJson(Map<String, dynamic> json) => Score(

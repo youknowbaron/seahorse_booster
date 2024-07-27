@@ -21,8 +21,9 @@ class Match {
   final String id;
   final String name;
   final Score score;
+  final String createdAt;
 
-  Match({required this.id, required this.name, required this.score});
+  Match({required this.id, required this.name, required this.score, required this.createdAt});
 
   factory Match.fromNames(List<String> names) {
     return Match(
@@ -35,6 +36,7 @@ class Match {
         horses: List.filled(names.length, 0),
         money: List.filled(names.length, 0),
       ),
+      createdAt: DateTime.now().toLocal().toIso8601String(),
     );
   }
 
