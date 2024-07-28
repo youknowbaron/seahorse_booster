@@ -1,8 +1,8 @@
 class Constants {
   Constants._();
 
-  static const kickPrice = 2;
-  static const onStagePrice = 5;
-  static const winPrice = 10;
-  static const superKickPower = 3;
+  static var kickPrice = 2;
+  static var onStagePrice = 5;
+  static var winPrice = 10;
+  static var superKickPower = 3;
 }

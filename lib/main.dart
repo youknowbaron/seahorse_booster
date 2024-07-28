@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:seahorse_calculator/constants.dart';
 import 'package:seahorse_calculator/match_history_page.dart';
 import 'package:seahorse_calculator/models.dart';
 import 'package:seahorse_calculator/players_page.dart';
 import 'package:seahorse_calculator/select_players_page.dart';
+import 'package:seahorse_calculator/settings_page.dart';
 import 'package:seahorse_calculator/splash_page.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,7 +18,14 @@ void main() async {
   Hive.init(kIsWeb ? null : (await getApplicationDocumentsDirectory()).path);
   await Hive.openBox('players');
   await Hive.openBox('matches');
-  await Hive.openBox('settings');
+  final settingsBox = await Hive.openBox('settings');
+
+  final kick = await settingsBox.get('kickPrice') as int?;
+  final onStage = await settingsBox.get('onStagePrice') as int?;
+  final win = await settingsBox.get('winPrice') as int?;
+  if (kick != null) Constants.kickPrice = kick;
+  if (onStage != null) Constants.onStagePrice = onStage;
+  if (win != null) Constants.winPrice = win;
 
   runApp(const MyApp());
 }
@@ -51,6 +60,18 @@ class HomePage extends HookWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Đá đầu heo'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(
